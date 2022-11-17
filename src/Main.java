@@ -6,30 +6,31 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Album album1 = new Album("album1","Alan Walker");
-        album1.addSong("Faded",4.5);
-        album1.addSong("Darkside",3.2);
-        album1.addSong("Unstoppable",3.4);
-        album1.addSong("Beliver",4);
+        album1.addSong("Song1",4.5);
+        album1.addSong("Song2",3.2);
+        album1.addSong("Song3",3.4);
+        album1.addSong("Song4",4);
 
         LinkedList<Song> playlist = new LinkedList<>();
-        album1.addToPlaylist("Faded",playlist);
-        album1.addToPlaylist("Beliver",playlist);
+        album1.addToPlaylist("Song1",playlist);
+        album1.addToPlaylist("Song2",playlist);
 //        System.out.println(album1.addToPlaylist("abc",playlist));if song is not present
-        album1.addToPlayList(2,playlist);
+        album1.addToPlayList(3,playlist);
 
         //printList(playlist);
         play(playlist);
     }
     public static void play(LinkedList<Song> playlist){
         Scanner sc = new Scanner(System.in);
-        ListIterator<Song> it = playlist.listIterator();
-        if(!it.hasNext()){
+        ListIterator<Song> itr = playlist.listIterator();
+        if(!itr.hasNext()){
             System.out.println("");
             return;
         }
-        System.out.println("You are now listening: "+ it.next().getTitle());
+        System.out.println("You are now listening: "+ itr.next().getTitle());
         showMenu();
 
+        boolean forward = true; // to check the case of next-prev or prev-next;
         while (true){
             int option = sc.nextInt();
             switch (option){
@@ -41,6 +42,62 @@ public class Main {
                     break;
                 case 2:
                     printList(playlist);
+                    break;
+                case 3:
+                    if(!forward){
+                        if(itr.hasNext()){
+                            itr.next();
+                        }
+                    }
+                    if(!itr.hasNext()){
+                        System.out.println("You reached at end of playlist");
+                    }else{
+                        System.out.println("You are listening "+ itr.next());
+                    }
+                    forward=true;
+                    break;
+                case 4:
+                    if(forward){
+                        if(itr.hasPrevious()){
+                            itr.previous();
+                        }
+                    }
+                    if(!itr.hasPrevious()){
+                        System.out.println("You reached at start of playlist");
+                    }else{
+                        System.out.println("You are listening "+ itr.previous());
+                    }
+                    forward=false;
+                    break;
+                case 5: //repeat the song
+                    if(forward){
+                        System.out.println("You are listening"+itr.previous());
+                        forward=false;
+                    }else{
+                        System.out.println("You are listening"+itr.next());
+                        forward=true;
+                    }
+                    break;
+                case 6://remove the song from the list
+                    if(forward){
+                        if(itr.hasNext()){
+                            itr.remove();
+                            System.out.println("you are listening "+itr.next());
+                            forward=true;
+                        }else{ //if list contains only one element
+                            itr.remove();
+                            System.out.println("Your playlist is empty");
+                        }
+                    }else{
+                        if(itr.hasPrevious()){
+                            itr.remove();
+                            System.out.println("you are listening "+itr.previous());
+                            forward = false;
+                        }else{
+                            itr.remove();
+                            System.out.println("Your playlist is empty");
+                        }
+                    }
                     break;
             }
         }
