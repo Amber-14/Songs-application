@@ -41,7 +41,11 @@ public class Main {
                     showMenu();
                     break;
                 case 2:
-                    printList(playlist);
+                    if(playlist.size()>0){
+                        printList(playlist);
+                    }else{
+                        System.out.println("Your playlist is empty !");
+                    }
                     break;
                 case 3:
                     if(!forward){
@@ -71,11 +75,19 @@ public class Main {
                     break;
                 case 5: //repeat the song
                     if(forward){
-                        System.out.println("You are listening"+itr.previous());
-                        forward=false;
-                    }else{
-                        System.out.println("You are listening"+itr.next());
-                        forward=true;
+                        if(itr.hasPrevious()){
+                            System.out.println("Now playing "+itr.previous().toString());
+                            forward = false;
+                        }else {
+                            System.out.println("we are at the start of the list");
+                        }
+                    }else {
+                        if(itr.hasNext()){
+                            System.out.println("now playing "+itr.next().toString());
+                            forward = true;
+                        }else {
+                            System.out.println("we have reached to the end of list");
+                        }
                     }
                     break;
                 case 6://remove the song from the list
@@ -85,8 +97,11 @@ public class Main {
                             System.out.println("you are listening "+itr.next());
                             forward=true;
                         }else{ //if list contains only one element
-                            itr.remove();
-                            System.out.println("Your playlist is empty");
+                            if(itr.hasPrevious()){
+                                itr.remove();
+                                System.out.println("You are listening "+itr.previous());
+                                forward=false;
+                            }
                         }
                     }else{
                         if(itr.hasPrevious()){
@@ -99,6 +114,18 @@ public class Main {
                         }
                     }
                     break;
+//                    if (playlist.size() >0){
+//                        itr.remove();
+//                        if(itr.hasNext()){
+//                            System.out.println("now playing "+itr.next().toString());
+//                        }
+//                        else {
+//                            if(itr.hasPrevious())
+//                                System.out.println("now playing "+itr.previous().toString());
+//                        }
+//                    }else{
+//                        System.out.println("Can't delete,playlist is empty!");
+//                    }
             }
         }
     }
